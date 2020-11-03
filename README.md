@@ -1,6 +1,10 @@
 docs: Verilog HDL을 이용한 Timer/Counter 
  
 --------
-구성
+• Logic diagram
 --------
-Mini Zed Board, FND 7-Segment
+   
+   
+   
+   
+   
