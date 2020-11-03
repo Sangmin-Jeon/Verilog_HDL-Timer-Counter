@@ -14,8 +14,9 @@ docs: Verilog HDL을 이용한 Timer/Counter
 
 <img width="1023" alt="스크린샷 2020-11-03 오후 1 17 06" src="https://user-images.githubusercontent.com/59474775/97949471-12789a80-1dd7-11eb-9162-2e8cfb7c1c71.png">
   
+  7-Segment에 시분을 표시하는 verilog 소스코드를 이용하여 시뮬레이션을 관측하기 위해 테스트 벤치를 
+  생성, 시뮬레이션으로 카운트되는 파형을 관측하기 위해 메인 source에서 count를 낮춰 빠르게 설정함
 
---------
 • Pin 연결
 --------
 
