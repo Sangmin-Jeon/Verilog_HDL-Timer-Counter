@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2020/06/10 16:08:35
+// Create Date: 2020/06/04 15:39:38
 // Design Name: 
 // Module Name: LogicSignalOut
 // Project Name: 
@@ -13,147 +13,194 @@
 // 
 // Dependencies: 
 // 
-// Revision:
+// Revision:  
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module LogicSignalOut1(
-    input clk,
-    input resetn,
-    output reg [7:0] signalout,bit,
-    output reg [3:0] digit
-
+module LogicSignalOut(
+    output reg [7:0] signalout,
+    output reg [3:0] digit,
+    input clk, 
+    input reset
     );
- 
-integer counter, num , n ,s01 , s10 ,m01, m10,z; 
-reg [1:0] state, nextstate;
+    reg [1:0] state, next_state;
+    integer count,count2,num,s01,s10,m01,m10,h01,h10;
 
-parameter s0 = 2'b00;
-parameter s1 = 2'b01;
-parameter s2 = 2'b10;
-parameter s3 = 2'b11;
+    
+    reg switch;
+    
+    parameter s0 = 2'b00;
+    parameter s1 = 2'b01;
+    parameter s2 = 2'b10;
+    parameter s3 = 2'b11;
+    
+    parameter period = 49999999;
+  
+    
+    always@ (posedge clk, negedge reset)
+    begin
+        if(!reset)
+            state <= s0;
+        else
+            state <= next_state;
+    end
+    always@ (posedge clk, negedge reset)begin
+        if(!reset)begin
+            switch <= 0;
+            count2 <= 0;
+        end
+        
+        else begin
+            if(count2 < 4999)begin
+                count2 <= count2 + 1;
+                switch <= 0;
+            end
+            
+            else begin
+                count2 <= 0;
+                switch <= 1;
+            end
+        end
+    end
+    
+    always@ (posedge switch)
+    begin
+        case(state)
+        s0:begin
+            next_state <= s1;
+        end
+        s1:begin
+            next_state <= s2;
+        end
+        s2:begin
+            next_state <= s3;
+        end
+        s3:begin
+            next_state <= s0;
+        end
+        default:begin
+            next_state <= s0;
+        end
+        endcase
+        end
 
-parameter delay = 1;
-
-always@(posedge clk , negedge resetn) begin // 0~9 LED
-   if(!resetn) begin
-      state <= s0;
-      num <= 0; 
-      counter <= 0; 
-      signalout <= 8'b00000000;
-      s01 <= 0;
-      s10 <= 0;
-      m01 <= 0;
-      m10 <= 0;
-      
-   end       
+always@ (posedge clk, negedge reset)begin
+        if(!reset)begin
+            count <= 0;
+            s01<=0;
+            s10<=0;
+            m01<=0;
+            m10<=0;
+            h01<=0;
+            h10<=0;
+         end
          
-   if(counter < 500000000) begin           
-         counter <= counter + 1; //counter++       
-   end       
-   else begin       
-      counter <= 0; // 카운터 초기화    
-      if(s01 < 10) begin
-      
-        s01 <= s01 +1; // 분 1의 자리 ++
-      end
-      else begin
-        s01 <= 0;
-        s10 <= s10 +1;
-      end    
-       
-       if(s01 < 9 )begin
-            s01 <= 0;
-            s10 <= s10 + 1;
-       end    
-       else if(s10 < 6) begin
-            s10 <= 0;
-            s01 <= 0;
-            m01 <= m01 + 1;
-       end
-       else if(m01 < 9) begin
-            s10 <= 0;
+        
+        
+        else begin
+            if(count < period)
+                count <= count + 1;
+                else begin
+                    count <= 0;
+                    
+                    if(s01 < 9)
+                        s01 <= s01 + 1;
+                    else begin
+                        
+                        s10 <= s10+1;
+                        s01 <= 0;
+                    end
+        end
+         
+         if(s10 > 5)begin
+           m01 <= m01 + 1;
+           s10 <= 0;
+         end
+         
+         if(m01 > 9)begin
             m01 <= 0;
             m10 <= m10 + 1;
-       end     
-       else if(m10 < 6)
-            m10 <= 0;         
-            m01 <= 0;
-  end                  
+         end
          
-end 
+         if(m10 > 5)begin
+            m10 <= 0;
+         end
+         if(h01 > 4)begin
+            h01 <= 0;
+            h10 <= h10 +1;
+         end
+         if(h10 > 2)begin
+            h10 <= 0; 
+         end
+      end
+ end
  
-always @(*) begin // state -> nextstate 반복
-case(state)
-s0 : nextstate <= s1;
-s1 : nextstate <= s2;
-s2 : nextstate <= s3;
-s3 : nextstate <= s0;
-
-default : nextstate <= s0;
-
-endcase
-end
-
-always@(posedge clk ) begin // 0~9 LEd     
-         
-   if(counter < 123456) begin //적당히 잔상 줄수있는 만큼          
-         counter <= counter + 1; //counter++       
-   end       
-   else begin       
-      counter <= 0; // 카운터 초기화
-      nextstate <= z; // 이부분은 알아서
-end
-end
-always @(*) begin // digit 
-   state <= nextstate;
-end
- 
-always @(posedge clk, negedge resetn) begin //출력
-   /*
-   case(state)
-      s0 : digit<= 4'b0000; num <= sec or min //state 에 따라 digit 및 num 값 설정
-   */
-if(!resetn)begin  
-   signalout <= 8'b11111100;
-   digit <= 4'b1110;
-  end
-else begin
-
-    case(state)
-        s0 : begin
-        digit <= 4'b1110;
-        num <= s01;
+always@ (posedge clk, negedge reset)begin
+    if(!reset)begin
+        signalout <= 8'b11000000;
+        digit <= 4'b0001;
+    end
+    else begin
+        case(state)
+        s0:begin
+            digit <= 4'b0001;
+            num <= m01;
         end
-        s1 : begin 
-        digit <= 4'b1101;    
-        num <= s10;
+        s1:begin
+            digit <= 4'b0010;
+            num <= m10;
         end
-        s2 : begin
-        digit <= 4'b1011;
-        num <= m01;
+        s2:begin
+            digit <= 4'b0100;
+            num <= h01;
         end
-        s3 : begin
-        digit <= 4'b0111;
-        num <= m10;
+        s3:begin
+            digit <= 4'b1000;
+            num <= h10;
         end
-    endcase
-end                       
-    case(num)
-      1 : signalout <= 8'b0000001; // LED 0        
-      2 : signalout <= 8'b1001111; // LED 1      
-      3 : signalout <= 8'b0010010;        
-      4 : signalout <= 8'b0000110;        
-      5 : signalout <= 8'b1001100; 
-      6 : signalout <= 8'b0100100;        
-      7 : signalout <= 8'b0100000;        
-      8 : signalout <= 8'b0001111;        
-      9 : signalout <= 8'b0000000;        
-      10 : signalout <= 8'b0000100; // LED 9     
-      default : signalout <= 8'b1111111; // 초기값   
-   endcase      
+        default : begin
+            digit <= 4'b0001;
+            num <= m01;
+        end
+        endcase
+        
+        case(num)
+        0:begin 
+            signalout[7:0] <= 8'b11000000;
+          end
+        1:begin 
+            signalout[7:0] <= 8'b11111001;
+          end
+        2:begin 
+            signalout[7:0] <= 8'b10100100;
+          end
+        3:begin 
+            signalout[7:0] <= 8'b10110000;
+          end
+        4:begin
+            signalout[7:0] <= 8'b10011001;
+          end
+        5:begin
+            signalout[7:0] <= 8'b10010010;
+          end
+        6:begin
+            signalout[7:0] <= 8'b10000010;
+          end
+        7:begin
+            signalout[7:0] <= 8'b11111000;
+          end
+        8:begin
+            signalout[7:0] <= 8'b10000000;
+          end
+        9:begin
+            signalout[7:0] <= 8'b10010000;
+          end
+        default : signalout[7:0] <= 8'b11000000;
+        endcase
+    end
 end
+        
 endmodule
