@@ -1,13 +1,13 @@
 docs: Verilog HDL을 이용한 Timer/Counter 
  
---------
+
 • Logic diagram
 --------
    
 <img width="971" alt="logic diagram" src="https://user-images.githubusercontent.com/59474775/97949318-90887180-1dd6-11eb-9e39-36f255b4cee3.png">
 
 
---------
+
 • TestBench 와 Source 연결
 --------
 
@@ -23,3 +23,15 @@ docs: Verilog HDL을 이용한 Timer/Counter
 <img width="534" alt="스크린샷 2020-11-03 오후 1 25 27" src="https://user-images.githubusercontent.com/59474775/97949796-1eb12780-1dd8-11eb-8837-43acf60fbcfb.png">
 
 <img width="505" alt="스크린샷 2020-11-03 오후 1 25 33" src="https://user-images.githubusercontent.com/59474775/97949877-59b35b00-1dd8-11eb-8c57-4ae9442c8a00.png">
+
+ pin R8포트 -> Signalout[0]번 
+           .
+           .
+           .
+ Pin N8포트 -> Signalout[7]번 입력
+ 
+ Pin M9포트 -> Digit[0]번 
+           .
+           .
+           .
+ Pin M11포트 -> Digit[0]번 설정            
