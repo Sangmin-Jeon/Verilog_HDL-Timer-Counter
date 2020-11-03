@@ -21,8 +21,10 @@ docs: Verilog HDL을 이용한 Timer/Counter
 --------
 
 <img width="534" alt="스크린샷 2020-11-03 오후 1 25 27" src="https://user-images.githubusercontent.com/59474775/97949796-1eb12780-1dd8-11eb-8837-43acf60fbcfb.png">
+{: width="100" height="100"}
 
 <img width="505" alt="스크린샷 2020-11-03 오후 1 25 33" src="https://user-images.githubusercontent.com/59474775/97949877-59b35b00-1dd8-11eb-8c57-4ae9442c8a00.png">
+{: width="100" height="100"}
 
  pin R8포트 -> Signalout[0]번 
            .
